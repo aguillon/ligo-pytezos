@@ -1,0 +1,39 @@
+{ parameter (or (address %decrement) (address %increment)) ;
+  storage (pair (big_map %counters address int) (big_map %metadata string bytes)) ;
+  code { LAMBDA
+           (pair int address (big_map address int) (big_map string bytes))
+           (pair (big_map address int) (big_map string bytes))
+           { UNPAIR 3 ;
+             DUP 3 ;
+             CAR ;
+             DUP 3 ;
+             GET ;
+             IF_NONE
+               { DUP 3 ;
+                 DIG 3 ;
+                 CAR ;
+                 DIG 2 ;
+                 DIG 3 ;
+                 SWAP ;
+                 SOME ;
+                 SWAP ;
+                 UPDATE ;
+                 UPDATE 1 }
+               { DUP 4 ;
+                 DIG 4 ;
+                 CAR ;
+                 DIG 2 ;
+                 DIG 3 ;
+                 ADD ;
+                 DIG 3 ;
+                 SWAP ;
+                 SOME ;
+                 SWAP ;
+                 UPDATE ;
+                 UPDATE 1 } } ;
+         SWAP ;
+         UNPAIR ;
+         IF_LEFT { PUSH int -1 ; PAIR 3 ; EXEC } { PUSH int 1 ; PAIR 3 ; EXEC } ;
+         NIL operation ;
+         PAIR } }
+
